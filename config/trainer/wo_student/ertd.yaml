@@ -1,0 +1,22 @@
+trainer: wo_student.trainerFramework_ERTDwoStudent
+train_epochs: !!int 10 # train epochs
+patience: !!int 3 # early stopping patience
+loss: !!str mse # loss function
+use_amp: !!bool false # use automatic mixed precision training
+online_learning: !!str full
+batch_size: 32
+test_eval_mode: true
+seq_len: 96
+timeenc: 2
+dataloader: data_loader
+residual: true
+teacher_freeze: false
+discounted: 0.9
+replayBufferSize: 300
+batchReplaySize: 32
+td: True
+er: true
+num_ERepochs: 1
+freq_ERupdate: 1
+td_k: 
+  - 1

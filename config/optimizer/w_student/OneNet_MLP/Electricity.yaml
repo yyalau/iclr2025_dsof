@@ -1,0 +1,30 @@
+learning_rate_bias: 0.001
+learning_rate_w: 0.001
+opt_main:
+  test:
+    batch:
+      amsgrad: true
+      lr: 0.0007909716513747983
+      opt: adamw
+    online:
+      amsgrad: false
+      lr: 0.002867969832521614
+      opt: adamw
+  train:
+    amsgrad: true
+    lr: 0.002928347346310541
+    opt: adamw
+opt_student:
+  test:
+    batch:
+      amsgrad: false
+      lr: 0.00043525182338640056
+      opt: adamw
+    online:
+      amsgrad: false
+      lr: 0.0002489957045682005
+      opt: adam
+  train:
+    amsgrad: true
+    lr: 0.007601588884897224
+    opt: adam

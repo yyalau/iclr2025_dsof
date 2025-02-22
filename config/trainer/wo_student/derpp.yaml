@@ -1,0 +1,14 @@
+trainer: wo_student.trainerFramework_derpp
+train_epochs: !!int 10 # train epochs
+patience: !!int 3 # early stopping patience
+loss: !!str mse # loss function
+use_amp: !!bool false # use automatic mixed precision training
+online_learning: !!str full
+batch_size: 32
+test_eval_mode: true
+seq_len: 96
+timeenc: 2
+buffer_size: 500
+batchReplaySize: 32
+mode: "reservoir"
+# dataloader: data_loader

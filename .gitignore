@@ -1,0 +1,25 @@
+.DS_Store
+.DS_Store?
+.idea
+*.pyc
+**/__pycache__/
+# checkpoints/
+# results/
+results1/
+# imgs/*
+# *.pdf
+# *.out
+events.*
+# *.pth
+*_pred
+*_true
+run_tuning.py
+optuna
+latex
+logs/*
+exps/*
+datasets/*
+config/trainer2
+config/model/backup
+src/models/backup
+tuning.py

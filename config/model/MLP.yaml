@@ -1,0 +1,5 @@
+model: MLP
+mlp_width: 16
+mlp_depth: 3
+mlp_dropout: 0
+act_str: 'Identity'

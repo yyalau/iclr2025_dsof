@@ -1,0 +1,14 @@
+model: FITS
+individual: False
+H_order:
+  ECL: 6
+  ETTh2: 8
+  ETTm1: 14
+  WTH: 12
+base_T:
+  ECL: 24
+  ETTh2: 24
+  ETTm1: 96
+  WTH: 144
+cut_freq: 40
+high_specx: False

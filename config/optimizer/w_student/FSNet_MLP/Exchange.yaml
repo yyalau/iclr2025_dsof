@@ -1,0 +1,28 @@
+opt_main:
+  test:
+    batch:
+      amsgrad: true
+      lr: 3.1661645750641836e-05
+      opt: adamw
+    online:
+      amsgrad: true
+      lr: 0.0001
+      opt: adam
+  train:
+    amsgrad: true
+    lr: 0.008385530365116772
+    opt: adam
+opt_student:
+  test:
+    batch:
+      amsgrad: true
+      lr: 0.0008155490300219818
+      opt: adamw
+    online:
+      amsgrad: true
+      lr: 6.0738731089293624e-05
+      opt: adamw
+  train:
+    amsgrad: true
+    lr: 0.0034518086947647867
+    opt: adamw

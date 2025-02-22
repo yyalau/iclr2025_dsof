@@ -1,0 +1,6 @@
+model: OneNet
+depth: 10
+enc_hidden_dim: 64
+enc_output_dim: 320
+kernel_size: 3
+individual: true

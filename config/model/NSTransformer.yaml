@@ -1,0 +1,30 @@
+model: NSTransformer
+e_layers: 2
+d_layers: 1
+p_hidden_dims: 
+  Electricity: 
+   - 256 
+   - 256
+  ETTh2: 
+    - 256 
+    - 256
+  ETTm1: 
+    - 256 
+    - 256
+  Exchange: 
+    - 64 
+    - 64
+  Traffic: 
+    - 128 
+    - 128
+  Weather: 
+    - 256 
+    - 256
+p_hidden_layers: 2
+output_attention: false
+d_model: 512
+embed: timeF
+dropout: 0
+n_heads: 8
+d_ff: 2048
+activation: gelu

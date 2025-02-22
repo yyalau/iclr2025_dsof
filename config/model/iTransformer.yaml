@@ -1,0 +1,60 @@
+# fc_dropout: !!float 0.05
+# head_dropout: !!float 0.0
+# patch_len: !!int 16
+# stride: !!int 8
+# padding_patch: !!str end
+# revin: !!int 0
+# affine: !!int 0
+# subtract_last: !!int 0
+# decomposition: !!int 0
+# kernel_size: !!int 25
+# tcn_output_dim: !!int 320
+# tcn_layer: !!int 2
+# tcn_hidden: !!int 160
+# individual: !!int 1
+# channel_cross: !!bool false
+model: iTransformer
+individual: False
+# mha_type: "org"
+# gamma: 0.9
+res_attention: true
+# norm: "batchnorm"
+# affine: false
+ff_type: "org"
+nh: 64
+fc_dropout: 0
+dropout: 0
+
+n_heads: 8
+e_layers: 
+  Electricity: 3
+  ETTh2: 2
+  ETTm1: 2
+  WTH: 3
+  Weather: 3
+  Exchange: 2
+  Traffic: 4
+d_model:
+  Electricity: 512
+  ETTh2: 128
+  ETTm1: 128
+  WTH: 512
+  Weather: 512
+  Exchange: 128
+  Traffic: 512
+d_ff:
+  Electricity: 512
+  ETTh2: 128
+  ETTm1: 128
+  WTH: 512
+  Weather: 512
+  Exchange: 128
+  Traffic: 512
+embed: "timeF"
+use_norm: true
+partial_start_index: 0
+inverse: false
+class_strategy: "projection"
+factor: 1
+activation: "gelu"
+output_attention: false

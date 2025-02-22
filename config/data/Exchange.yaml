@@ -1,0 +1,25 @@
+freq: !!str 't' #'freq for time features encoding, options:[s:secondly, t:minutely, h:hourly, d:daily, b:business days, w:weekly, m:monthly], you can also use more detailed freq like 15min or 3h'
+test_bsz: !!int 1
+root_path: !!str './datasets/'
+data_path: !!str 'Exchange.csv'
+features: !!str 'M' # M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate
+seq_len: !!int 96
+label_len: !!int 0
+pred_len: !!int 48
+inverse: !!bool False # inverse output data
+cols: null # if not null, only use the cols to train
+num_workers: !!int 0 # num of workers in data loader
+batch_size: !!int 32
+enc_in: 
+  M:  &var_dimension 8 
+  MS: *var_dimension
+  S: !!int 1
+dec_in: 
+  M: *var_dimension 
+  MS: *var_dimension
+  S: !!int 1
+c_out: 
+  M: *var_dimension 
+  MS: !!int 1
+  S: !!int 1
+target: 'OT'

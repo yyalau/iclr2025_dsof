@@ -1,0 +1,73 @@
+Electricity:
+  DLinear: 500
+  iTransformer: 2200
+  FSNet: 1000
+  OneNet: 2000
+  FITS: 500
+  PatchTST: 4100
+  NSTransformer: 2000
+  MLP: 0
+ETTh2:
+  DLinear: 400
+  iTransformer: 600
+  FSNet: 700
+  OneNet: 1400
+  FITS: 400
+  PatchTST: 600
+  NSTransformer: 1500
+  MLP: 0
+ETTm1:
+  DLinear: 400
+  iTransformer: 600
+  FSNet: 800
+  OneNet: 1600
+  FITS: 400
+  PatchTST: 600
+  NSTransformer: 1500
+  MLP: 0
+WTH:
+  DLinear: 600
+  iTransformer: 1500
+  FSNet: 2600
+  OneNet: 1000
+  FITS: 600
+  PatchTST: 1000
+  NSTransformer: 2000
+  MLP: 0
+Exchange:
+  DLinear: 400
+  iTransformer: 1400
+  OneNet: 2000
+  FSNet: 2600
+  FITS: 400
+  PatchTST: 600
+  NSTransformer: 1600
+  MLP: 0
+ILI:
+  DLinear: 600
+  iTransformer: 1500
+  FSNet: 2600
+  OneNet: 4600
+  FITS: 600
+  PatchTST: 1000
+  NSTransformer: 2000
+  MLP: 0
+Traffic:
+  DLinear: 600
+  iTransformer: 9000
+  FSNet: 2600
+  OneNet: 8000
+  FITS: 600
+  PatchTST: 9200
+  NSTransformer: 1700
+  MLP: 0
+Weather:
+  DLinear: 400
+  iTransformer: 900
+  FSNet: 800
+  OneNet: 1600
+  FITS: 400
+  PatchTST: 800
+  NSTransformer: 1400
+  MLP: 0
+      
