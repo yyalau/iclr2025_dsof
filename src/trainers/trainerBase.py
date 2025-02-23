@@ -10,7 +10,6 @@ from src.utils.tools import Struct, save_model
 from misc.runnerbase import Utility
 import optuna
 
-# import ipdb; ipdb.set_trace()
 
 # import numpy as np
 import time
@@ -80,7 +79,6 @@ class TrainerBase:
         self.datalog = DataLogger(["pred", "true", "mse", "mae", "embeddings"])
 
     def _get_optim(self, arguments, params):
-        # import ipdb; ipdb.set_trace()
         opt_str = arguments["opt"].lower()
         Optimizer = {
             "adam": optim.Adam,
@@ -95,8 +93,6 @@ class TrainerBase:
         return Optimizer(params, **d)
 
     def _select_optimizer(self):
-
-        # TODO: if args.teacherTD: add main_model['test']['online'] to opts['test']['online']
 
         opts = {
             "train": [
@@ -138,14 +134,10 @@ class TrainerBase:
             self.studentFFN.update_ocp(prev, curr)
 
     def store_grad(self):
-        # if hasattr(self.main_model, 'store_grad'):
-        # self.main_model.store_grad()
+
         self.mainFFN.store_grad()
         if self.studentFFN is not None:
             self.studentFFN.store_grad()
-        # if self.student_model is not None and has
-        # attr(self.student_model, 'store_grad'):
-        #     self.student_model.store_grad()
 
     def display_msg(self, epoch, train_steps, modes):
         msg = f"Epoch: {epoch + 1}, Steps: {train_steps + 1} "
@@ -173,7 +165,6 @@ class TrainerBase:
         )
 
         loss = self.criterion(outputs["pred"], outputs["true"])
-        # import ipdb; ipdb.set_trace()
         if self.args.use_amp:
             self.scaler.scale(loss).backward()
             for opt in self.opt["train"]:
@@ -198,8 +189,6 @@ class TrainerBase:
             self.mainFFN.get_future(outputs["pred"]).detach().cpu(),
             self.mainFFN.get_future(outputs["true"]).detach().cpu(),
         )
-        # import ipdb; ipdb.set_trace()
-        # import ipdb; ipdb.set_trace()
         return {"loss": loss.item()}
 
     def test_step(self, dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark):
@@ -223,7 +212,6 @@ class TrainerBase:
 
         path = os.path.join(self.args.setting, "checkpoints")
         if not self.args.timing:
-            # import ipdb; ipdb.set_trace()
             os.makedirs(path, exist_ok=True)
 
         time_now = time.time()
@@ -325,7 +313,6 @@ class TrainerBase:
                     self.writer.add_scalar(
                         f"learning rate {i}", opt.param_groups[0]["lr"], epoch
                     )
-            # adjust_learning_rate(self.opt, epoch + 1, self.args)
 
             if self.args.test_run or self.args.timing or encountered_nan:
                 break
@@ -333,15 +320,12 @@ class TrainerBase:
         if not self.args.timing:
             self.load(early_stopping.best_path)
 
-        # del train_data, train_loader, vali_data, vali_loader
-
         return self.main_model
 
     def test(self, test_data, test_loader, trial=None):
         encountered_nan = False
-        #  = self._get_data(flag='test')
 
-        if self.args.test_eval_mode or self.online == "none":
+        if self.online == "none":
             self.main_model.eval()
 
         self.online_freezing()
@@ -410,7 +394,6 @@ class TrainerBase:
             #     ll = f"{self.args.main_model['model']},{self.args.data},{self.args.y_trainer},"
             #     ll += f"{exp_time},{self.args.pred_len },{(self.args.pred_len)/exp_time}\n"
             #     f.write(ll)
-            # import ipdb; ipdb.set_trace()
             with open('latex/timing_cpu.csv', 'a+') as f:
                 ll = f"{self.args.main_model['model']},{self.args.data},{self.args.y_trainer},"
                 ll += f"{cpu_time},{50 },{50/cpu_time}\n"
@@ -429,9 +412,7 @@ class TrainerBase:
             self.save(name=f"s{i}_test_{self.meters['test']['mse'].avg:.4f}.pth")
 
         if not self.args.timing: self.writer.close()
-        # import ipdb; ipdb.set_trace()
 
-        # del test_data, test_loader
         return (
             [
                 self.meters["test"]["mae"].avg,

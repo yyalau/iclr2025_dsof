@@ -1,17 +1,12 @@
 replayBufferSize: 300
 batchReplaySize: 32
 batch_size: 32
-dataloader: data_loader
 discounted: 1
 er: true
-er_w_student: true
-loss: mse
 online_learning: full
 patience: 3
 seq_len: 96
 td: false
-teacher_freeze: false
-test_eval_mode: true
 timeenc: 2
 train_epochs: 10
 trainer: w_student.trainerFramework_ERTDRes

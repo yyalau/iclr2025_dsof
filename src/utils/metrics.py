@@ -1,6 +1,4 @@
 import numpy as np
-import numexpr as ne
-import pdb
 
 def cumavg(m):
     cumsum= np.cumsum(m)
@@ -14,10 +12,9 @@ def CORR(pred, true):
     d = np.sqrt(((true-true.mean(0))**2*(pred-pred.mean(0))**2).sum(0))
     return (u/d).mean(-1)
 
-def MAE(pred, true):
-    
+def MAE(pred, true):    
     return np.mean(np.abs(pred-true))
-    #return ne.evaluate('sum(abs(pred-true))')/true.size
+
 def MSE(pred, true):
     return np.mean((pred-true)**2)
 
@@ -26,13 +23,9 @@ def RMSE(pred, true):
 
 def MAPE(pred, true):
     return np.mean(np.abs((pred - true) / true))
-    #return ne.evaluate('sum(abs(pred-true)/true)')/true.shape[0]
-    #return 0
-    #return ne.evaluate('sum(abs(pred-true))')/(true.size)
 
 def MSPE(pred, true):
     return np.mean(np.square((pred - true) / true))
-    #return 0
 
 def metric(pred, true):
     

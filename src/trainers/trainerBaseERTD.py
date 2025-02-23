@@ -26,13 +26,11 @@ class TrainerBaseERTD(TrainerBase):
         self.num_ERepochs = args.num_ERepochs
         self.freq_ERupdate = args.freq_ERupdate
         self.count = 0
-        # self.replayBuffer = deque(maxlen=self.replayBufferSize)
         self.replayBuffer = [None, None, None, None]
 
         
         self.MSEReductNone = nn.MSELoss(reduction="none")
         
-        # self.indices = [2**i for i in range(int(np.ceil(np.log2(self.args.pred_len))))]
         self.indices = [ k for k in self.args.td_k if k <= self.args.pred_len]
         self.discountedW = []
         
@@ -97,7 +95,6 @@ class TrainerBaseERTD(TrainerBase):
                 > self.replayBufferSize
             ):
                 self.replayBuffer = [bufferT[:, 1:] for bufferT in self.replayBuffer]
-                # import ipdb; ipdb.set_trace()
 
             # number of sequences in the replay buffer
             if (
@@ -168,15 +165,11 @@ class TrainerBaseERTD(TrainerBase):
         if self.laststepB[0] is not None and (
             self.laststepB[0].shape[1] - self.args.seq_len + 1 >= max(self.indices)
         ):
-            # import ipdb; ipdb.set_trace()
 
             pB_x, pB_y, pB_x_mark, pB_y_mark = [
                 torch.cat([g(x, index, j) for index in self.indices], dim=0)
                 for j, x in enumerate(self.laststepB)
             ]
-
-            # [1, 2, 4, 8, 16, 32]
-            # import ipdb; ipdb.set_trace()
 
             # previous prediction
             prevB = self._process_one_batch(
@@ -216,9 +209,8 @@ class TrainerBaseERTD(TrainerBase):
                 batch_x_mark,
                 batch_y_mark[:,0:1]
             ]
-            
             return
-        # import ipdb; ipdb.set_trace()
+
         self.laststepB = [
             torch.cat([lastT, currT[:, 0:1]], dim=1) 
             for lastT, currT in zip(
@@ -231,5 +223,3 @@ class TrainerBaseERTD(TrainerBase):
                 ],
             )
         ]
-
-        # self.laststepB.append([batch_x, batch_y, batch_x_mark, batch_y_mark,])

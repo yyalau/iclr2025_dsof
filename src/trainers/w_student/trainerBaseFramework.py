@@ -16,7 +16,7 @@ class TrainerBaseFramework(TrainerBaseERTD):
 
     def backward_lossT_test(self, prev,):
         lossT = self.criterion(prev['predT'], self.mainFFN.gt4update(prev))            
-        if not self.args.teacher_freeze: lossT.backward()
+        lossT.backward()
         return lossT
     
     def backward_lossFT(self, prev, curr):
@@ -25,7 +25,6 @@ class TrainerBaseFramework(TrainerBaseERTD):
         return lossFT
     
     def backward_tdlossFT(self, prev, curr):
-        if not self.args.er_w_student: return None 
         
         td_truth = []
         

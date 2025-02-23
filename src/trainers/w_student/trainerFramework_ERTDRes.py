@@ -11,7 +11,6 @@ class Exp_TS2VecSupervised(TrainerBaseFramework):
     def __init__(self, args, main_model, student_model):
 
         assert student_model is not None, 'Student model is required for this framework'
-        # import ipdb; ipdb.set_trace()
        
         super().__init__(args, main_model, student_model)
         self.student_model = student_model(Struct(args).dict2attr('student_model'), args.seq_len + args.pred_len).to(self.device)   
@@ -53,7 +52,6 @@ class Exp_TS2VecSupervised(TrainerBaseFramework):
         outputs = self._process_one_batch(
             train_data, batch_x, batch_y, batch_x_mark, batch_y_mark, mode = 'train')
         
-        # import ipdb; ipdb.set_trace()
         lossT = self.backward_lossT_train(outputs)
         lossFT = self.backward_lossFT(outputs, outputs)
         

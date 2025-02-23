@@ -17,7 +17,7 @@ class Exp_TS2VecSupervised(TrainerBaseERTD):
     
     def backward_lossT_test(self, prev):
         lossT = self.criterion(prev['predT'], self.mainFFN.gt4update(prev))            
-        if not self.args.teacher_freeze: lossT.backward()
+        lossT.backward()
         return lossT
     
     def backward_lossFT(self, prev, curr):
@@ -45,14 +45,11 @@ class Exp_TS2VecSupervised(TrainerBaseERTD):
 
         outputs = self.mainFFN.ffn(dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark, mode)
         outputs.update({'predT': outputs['pred'], })
-        # outputs.update({'true': batch_y})
         return outputs
     
     def train_step(self, dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark):
-        # import ipdb; ipdb.set_trace()
         outputs = self._process_one_batch(dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark, mode='train')
         
-        # import ipdb; ipdb.set_trace()
         loss = self.criterion(outputs['pred'], self.mainFFN.gt4update(outputs))
         loss.backward()
         

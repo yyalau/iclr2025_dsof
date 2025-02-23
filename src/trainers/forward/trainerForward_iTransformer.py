@@ -1,4 +1,3 @@
-# from einops import rearrange
 import torch
 from src.trainers.forward.trainerBaseForward import TrainerBaseForward
 import warnings

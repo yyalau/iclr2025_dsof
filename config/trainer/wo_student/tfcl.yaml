@@ -1,17 +1,14 @@
 trainer: wo_student.trainerFramework_tfcl
 train_epochs: !!int 10 # train epochs
 patience: !!int 3 # early stopping patience
-loss: !!str mse # loss function
 use_amp: !!bool false # use automatic mixed precision training
 online_learning: !!str full
 batch_size: 32
-test_eval_mode: true
 seq_len: 96
 timeenc: 2
 mode: "reservoir"
 recent_buffer_size: 20
 hard_buffer_size: 5
-# dataloader: data_loader
 mas_weight: 0.5
 loss_buffer_size: 5
 loss_window_mean_threshold: 0.2

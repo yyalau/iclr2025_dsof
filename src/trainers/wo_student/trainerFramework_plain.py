@@ -20,7 +20,6 @@ class Exp_TS2VecSupervised(TrainerBase):
     def train_step(self, dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark):
 
         outputs = self._process_one_batch(dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark, mode='train')
-        # import ipdb; ipdb.set_trace()
         loss = self.criterion(outputs['pred'], self.mainFFN.gt4update(outputs))
         loss.backward()
         
