@@ -1,11 +1,7 @@
-from src.trainers.trainerBase import TrainerBase
+from trainers.trainerBase import TrainerBase
 import warnings
-
-# from collections import deque
 import torch
 from torch import nn
-
-# import random
 import numpy as np
 
 warnings.filterwarnings("ignore")
@@ -14,7 +10,7 @@ warnings.filterwarnings("ignore")
 class TrainerBaseERTD(TrainerBase):
     def __init__(self, args, main_model, student_model):
 
-        super().__init__(args, main_model, student_model)
+        super().__init__(args, main_model)
 
         self.laststepA = [None, None, None, None]
         self.laststepB = [None, None, None, None]

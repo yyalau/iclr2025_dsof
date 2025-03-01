@@ -1,7 +1,7 @@
 
 import torch
-from src.trainers.w_student.trainerBaseFramework import TrainerBaseFramework
-from src.utils.tools import Struct
+from trainers.w_student.trainerBaseFramework import TrainerBaseFramework
+from utils.tools import Struct
 import importlib
 import warnings
 warnings.filterwarnings('ignore')
@@ -14,7 +14,7 @@ class Exp_TS2VecSupervised(TrainerBaseFramework):
        
         super().__init__(args, main_model, student_model)
         self.student_model = student_model(Struct(args).dict2attr('student_model'), args.seq_len + args.pred_len).to(self.device)   
-        self.studentFFN = getattr(importlib.import_module(f'src.trainers.forward.trainerForward_{args.student_model["model"]}'), 
+        self.studentFFN = getattr(importlib.import_module(f'trainers.forward.trainerForward_{args.student_model["model"]}'), 
                                   'TrainerForward')(args, self.student_model, self.device)
     
     

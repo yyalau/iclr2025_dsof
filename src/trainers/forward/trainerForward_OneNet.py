@@ -1,11 +1,10 @@
 # from einops import rearrange
 import torch
-from src.trainers.forward.trainerBaseForward import TrainerBaseForward
+from trainers.forward.trainerBaseForward import TrainerBaseForward
 import torch.nn.functional as F
 
 from torch import optim
-from src.models.MLP import Model as MLP
-from torch import nn
+from models.MLP import Model as MLP
 
 import warnings
 warnings.filterwarnings('ignore')

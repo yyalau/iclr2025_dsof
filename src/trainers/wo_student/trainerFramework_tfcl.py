@@ -1,6 +1,6 @@
 import torch
-from src.trainers.wo_student.trainerFramework_plain import Exp_TS2VecSupervised as TrainerPlain
-from src.utils.buffer import BufferFIFO as Buffer
+from trainers.wo_student.trainerFramework_plain import Exp_TS2VecSupervised as TrainerPlain
+from utils.buffer import BufferFIFO as Buffer
 from collections import deque
 import numpy as np
 import warnings

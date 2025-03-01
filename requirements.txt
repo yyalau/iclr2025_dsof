@@ -1,0 +1,17 @@
+common==0.1.2
+einops==0.8.1
+ipdb==0.13.13
+ipywidgets==8.0.5
+matplotlib==3.6.3
+mkl==2024.2.1
+numpy==1.23.4
+pandas==2.0.3
+PyYAML==6.0
+PyYAML==6.0.2
+regex==2023.3.23
+scikit_learn==1.2.2
+scipy==1.9.1
+sympy==1.12
+torch==2.1.0+cu118
+torchvision==0.16.0+cu118
+tqdm==4.64.1

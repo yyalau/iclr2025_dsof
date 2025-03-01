@@ -7,8 +7,8 @@ from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler as sklearn_StandardScaler
 from collections import defaultdict
 
-from src.utils.tools import StandardScaler
-from src.utils.timefeatures import time_features
+from utils.tools import StandardScaler
+from utils.timefeatures import time_features
 
 import warnings
 warnings.filterwarnings('ignore')

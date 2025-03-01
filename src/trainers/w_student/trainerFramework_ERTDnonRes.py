@@ -1,7 +1,6 @@
 import importlib
-import torch
-from src.trainers.w_student.trainerBaseFramework import TrainerBaseFramework
-from src.utils.tools import Struct
+from trainers.w_student.trainerBaseFramework import TrainerBaseFramework
+from utils.tools import Struct
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -16,7 +15,7 @@ class Exp_TS2VecSupervised(TrainerBaseFramework):
         
         self.same_arch = True if args.main_model == args.student_model else False
         self.student_model = student_model(Struct(args).dict2attr('student_model'), args.seq_len).to(self.device)         
-        self.studentFFN = getattr(importlib.import_module(f'src.trainers.forward.trainerForward_{args.student_model["model"]}'), 
+        self.studentFFN = getattr(importlib.import_module(f'trainers.forward.trainerForward_{args.student_model["model"]}'), 
                                   'TrainerForward')(args, self.student_model, self.device)
 
     def _process_one_batch(self, dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark, mode='train'):

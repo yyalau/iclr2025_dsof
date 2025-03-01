@@ -1,5 +1,5 @@
 import torch
-from src.trainers.trainerBase import TrainerBase
+from trainers.trainerBase import TrainerBase
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -7,7 +7,7 @@ warnings.filterwarnings('ignore')
 class Exp_TS2VecSupervised(TrainerBase):
     def __init__(self, args, main_model, student_model):
         
-        super().__init__(args, main_model, student_model)
+        super().__init__(args, main_model)
         assert args.student_model['model'] is None, 'Student model exists. This framework is for training without student model.'
         # assert args.pred_len == 1, 'This framework can only be used for training with prediction length 1. Please set `ar_pred_len` for running in AR mode.'
         self.laststeps = []

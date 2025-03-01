@@ -1,25 +1,17 @@
 from tqdm import tqdm
 
-from src.utils.tools import EarlyStopping, AverageMeter, DataLogger
-from src.utils.metrics import metric  # , cumavg
-
-# from src.utils.optim import Adbfgs, AdamSVD #, SAGM
-# from utils.optim.scheduler import LinearScheduler
-# from src.data.data_loader import Dataset_Custom as Data
-from src.utils.tools import Struct, save_model
-from misc.runnerbase import Utility
-import optuna
+from utils.tools import EarlyStopping, AverageMeter, DataLogger
+from utils.metrics import metric  # , cumavg
+from utils.tools import Struct, save_model
+# from misc.runnerbase import Utility
 
 
-# import numpy as np
 import time
 import torch
 import torch.nn as nn
 from torch import optim
 
-from torch.utils.tensorboard import SummaryWriter
-
-# import yaml
+# from torch.utils.tensorboard import SummaryWriter
 
 import os
 import time
@@ -30,10 +22,8 @@ import importlib
 
 
 class TrainerBase:
-    # TODO: remove the student_model argument from the constructor
-    def __init__(self, args, main_model, student_model):
+    def __init__(self, args, main_model):
 
-        # super().__init__(args)
         self.args = args
         self.online = args.online_learning
         self.device = args.device
@@ -43,7 +33,7 @@ class TrainerBase:
         ).to(self.device)
         self.mainFFN = getattr(
             importlib.import_module(
-                f'src.trainers.forward.trainerForward_{args.main_model["model"]}'
+                f'trainers.forward.trainerForward_{args.main_model["model"]}'
             ),
             "TrainerForward",
         )(args, self.main_model, self.device)
@@ -54,9 +44,9 @@ class TrainerBase:
         self.scaler = torch.cuda.amp.GradScaler() if args.use_amp else None
         self.f_dim = -1 if self.args.features == "MS" else 0
 
-        if not self.args.timing:
-            self.writer = SummaryWriter(log_dir=args.setting)
-            self.writer.add_text("comments", args.comments)
+        # if not self.args.timing:
+        #     self.writer = SummaryWriter(log_dir=args.setting)
+        #     self.writer.add_text("comments", args.comments)
 
         self.criterion = self._select_criterion()
 
@@ -211,8 +201,9 @@ class TrainerBase:
         self.opt = self._select_optimizer()
 
         path = os.path.join(self.args.setting, "checkpoints")
-        if not self.args.timing:
-            os.makedirs(path, exist_ok=True)
+        os.makedirs(path, exist_ok=True)
+        # if not self.args.timing:
+        #     os.makedirs(path, exist_ok=True)
 
         time_now = time.time()
         train_steps = len(train_loader)
@@ -291,34 +282,31 @@ class TrainerBase:
                 ),
             }
             
-            if not self.args.timing:
-                early_stopping(
-                    self.meters["valid"][k].avg,
-                    ckpt_content,
-                    path,
-                )
-            #    name=f"e{epoch}_valid_{self.meters['valid'][k].avg:.4f}.pth")
+            early_stopping(
+                self.meters["valid"][k].avg,
+                ckpt_content,
+                path,
+            )
 
-                if early_stopping.early_stop:
-                    print("Early stopping")
-                    break
-
-                #### logging
-                print(self.display_msg(epoch, train_steps, ["train", "valid"]))
-                for mode in self.meters.keys():
-                    for k, v in self.meters[mode].items():
-                        self.writer.add_scalar(f"{mode}/{k}", v.avg, epoch)
-
-                for i, opt in enumerate(self.opt["train"]):
-                    self.writer.add_scalar(
-                        f"learning rate {i}", opt.param_groups[0]["lr"], epoch
-                    )
-
-            if self.args.test_run or self.args.timing or encountered_nan:
+            if early_stopping.early_stop:
+                print("Early stopping")
                 break
 
-        if not self.args.timing:
-            self.load(early_stopping.best_path)
+            #### logging
+            print(self.display_msg(epoch, train_steps, ["train", "valid"]))
+            # for mode in self.meters.keys():
+            #     for k, v in self.meters[mode].items():
+            #         self.writer.add_scalar(f"{mode}/{k}", v.avg, epoch)
+
+            # for i, opt in enumerate(self.opt["train"]):
+            #     self.writer.add_scalar(
+            #         f"learning rate {i}", opt.param_groups[0]["lr"], epoch
+            #     )
+
+            if self.args.test_run or encountered_nan:
+                break
+
+        self.load(early_stopping.best_path)
 
         return self.main_model
 
@@ -334,9 +322,7 @@ class TrainerBase:
         start_cpu = 0
 
         for i, (batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(pbar):
-            if self.args.timing and i == 100:
-                start = time.time()
-                start_cpu = time.process_time()
+
             
             outputs = self.test_step(
                 test_data, batch_x, batch_y, batch_x_mark, batch_y_mark
@@ -351,11 +337,10 @@ class TrainerBase:
             if metrics["mse"] != metrics["mse"]:
                 encountered_nan = True
 
-            if not self.args.timing:
-                for k, v in metrics.items():
-                    self.meters["test"][k].update(v)
-                    self.writer.add_scalar(f"test/{k}", v, i)
-                    self.writer.add_scalar(f"test/c{k}", self.meters["test"][k].avg, i)
+            for k, v in metrics.items():
+                self.meters["test"][k].update(v)
+                # self.writer.add_scalar(f"test/{k}", v, i)
+                # self.writer.add_scalar(f"test/c{k}", self.meters["test"][k].avg, i)
 
             self.datalog.update({k: metrics[k] for k in metrics.keys()})
 
@@ -370,34 +355,27 @@ class TrainerBase:
             if self.args.test_run  and i > (self.args.pred_len + 50):
                 break
             
-            if (self.args.timing and i == 150):
-                break
-
-            if trial is not None:
-                trial.report(self.meters["test"]["mse"].avg, i)
-                if trial.should_prune():
-                    raise optuna.TrialPruned()
-
             if encountered_nan:
                 break
 
         print("test shape:", self.datalog["pred"].shape, self.datalog["true"].shape)
         # end = 
         exp_time = time.time() - start
+        
         #### logging and saving
-        if self.args.timing:
-            cpu_time = time.process_time() - start_cpu
+        # if self.args.timing:
+        #     cpu_time = time.process_time() - start_cpu
 
-            # TODO: make it customizable
-            gpu0 = Utility.get_gpu_usage()[0]
+            # gpu0 = Utility.get_gpu_usage()[0]
             # with open('latex/timing.csv', 'a+') as f:
             #     ll = f"{self.args.main_model['model']},{self.args.data},{self.args.y_trainer},"
             #     ll += f"{exp_time},{self.args.pred_len },{(self.args.pred_len)/exp_time}\n"
             #     f.write(ll)
-            with open('latex/timing_cpu.csv', 'a+') as f:
-                ll = f"{self.args.main_model['model']},{self.args.data},{self.args.y_trainer},"
-                ll += f"{cpu_time},{50 },{50/cpu_time}\n"
-                f.write(ll)
+            
+            # with open('latex/timing_cpu.csv', 'a+') as f:
+            #     ll = f"{self.args.main_model['model']},{self.args.data},{self.args.y_trainer},"
+            #     ll += f"{cpu_time},{50 },{50/cpu_time}\n"
+            #     f.write(ll)
                 
             # with open('latex/memory.csv', 'a+') as f:
             #     ll = f"{self.args.main_model['model']},{self.args.data},{self.args.y_trainer},"
@@ -408,10 +386,9 @@ class TrainerBase:
             f"mse:{self.meters['test']['mse'].avg}, mae:{self.meters['test']['mae'].avg}, time:{exp_time}"
         )
         
-        if not self.args.timing:
-            self.save(name=f"s{i}_test_{self.meters['test']['mse'].avg:.4f}.pth")
+        self.save(name=f"s{i}_test_{self.meters['test']['mse'].avg:.4f}.pth")
 
-        if not self.args.timing: self.writer.close()
+        # self.writer.close()
 
         return (
             [

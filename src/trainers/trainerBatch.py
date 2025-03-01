@@ -1,9 +1,6 @@
-from src.trainers.trainerBase import TrainerBase
+from trainers.trainerBase import TrainerBase
 import warnings
-from collections import deque
 import torch
-from torch import nn
-import random
 warnings.filterwarnings('ignore')
 
 
@@ -11,7 +8,7 @@ class Exp_TS2VecSupervised(TrainerBase):
     def __init__(self, args, main_model, student_model):
         
         assert student_model is None, 'Student model is not required for this framework'
-        super().__init__(args, main_model, student_model)
+        super().__init__(args, main_model)
     
     def _process_one_batch(self, dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark, mode='train'):
 

@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from src.models.blocks.trendDecomposition import series_decomp
+from models.blocks.trendDecomposition import series_decomp
 
 
 class Model(nn.Module):

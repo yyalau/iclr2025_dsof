@@ -1,5 +1,5 @@
 import torch
-from src.trainers.trainerBaseERTD import TrainerBaseERTD
+from trainers.trainerBaseERTD import TrainerBaseERTD
 
 import warnings
 warnings.filterwarnings('ignore')

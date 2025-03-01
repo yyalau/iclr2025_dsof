@@ -1,6 +1,6 @@
 import torch
-from src.trainers.wo_student.trainerFramework_plain import Exp_TS2VecSupervised as TrainerPlain
-from src.utils.buffer import Buffer
+from trainers.wo_student.trainerFramework_plain import Exp_TS2VecSupervised as TrainerPlain
+from utils.buffer import Buffer
 import warnings
 warnings.filterwarnings('ignore')
 

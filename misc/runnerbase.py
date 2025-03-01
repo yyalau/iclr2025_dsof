@@ -1,7 +1,6 @@
 import subprocess
 import os
 import yaml
-# import time
 import csv
 
 
@@ -13,7 +12,7 @@ class Utility:
     
     def __init__(self, process_threshold = 15):
         self.process_threshold = process_threshold
-        with open(base('./gpu_capacity.yaml')) as f:
+        with open(base('misc/gpu_capacity.yaml')) as f:
             self.capacity = yaml.load(f, Loader=yaml.FullLoader)
 
         self.estimated_free = self.get_gpu_memory().copy()
@@ -72,11 +71,6 @@ class Utility:
     
     @staticmethod
     def get_gpu_names(gpu_distribution):
-        # command = "nvidia-smi --query-gpu=name --format=csv"
-        # gpu_info = subprocess.check_output(command.split()).decode('ascii').split('\n')[1:-1]
-        # return gpu_info
-        x = []
-        
         x = [ v for v in gpu_distribution.values()]
         return set(x)
     
@@ -113,9 +107,11 @@ class Utility:
         return None
 
     @staticmethod
-    def pid_gpu_cmd_mapping( username = 'yyalau'):
+    def pid_gpu_cmd_mapping():
         hostname = subprocess.check_output("hostname").decode('ascii')[:-1].split('.')[0]
+        username = subprocess.check_output("whoami").decode('ascii')[:-1].split('.')[0]
 
+        # TODO: define your own busmap        
         hex2dec_busmap = { 
             'dycpu3': {
                 '1A': 0,
@@ -163,9 +159,7 @@ class Utility:
             gpu_info[pid] = {
                 'used_memory': used_memory,
                 'bus_id': hex2dec_busmap[hostname][bus_id.split(':')[1]]
-            }
-        # import ipdb; ipdb.set_trace()
-        
+            }        
         python_command = f"pgrep python -u {username}"
         python_processes = subprocess.check_output(python_command.split()).decode('ascii').split('\n')[:-1]
 
@@ -175,8 +169,6 @@ class Utility:
         
         for pid in unrelated_processes:
             gpu_info.pop(pid, None)
-
-        # import ipdb; ipdb.set_trace()
 
         for pid, info in gpu_info.items():
             pid_cmd = subprocess.check_output(f"ps -p {pid} -o cmd=".split()).decode('ascii')[:-1].split()        
@@ -205,18 +197,13 @@ class Utility:
 class BaseCLI:
     
     def __init__(self, main_models, student_models, opts, trainers, 
-                 test_run, mode = 'zip'):
+                 use_nohup = False, mode = 'zip'):
         self.main_models = main_models
         self.student_models = student_models
         self.opts = opts
         self.trainers = trainers
         self.mode = mode
-        self.test_run = test_run
-
-    # def stuDataset_inp(self, sett_model):
-    #     if sett_model is None or sett_model == 'placeholder': return True
-    #     if sett_model.startswith('MLP') and sett_model != 'MLP/org': return False
-    #     return True
+        self.use_nohup = use_nohup
 
     def get_settings(self):
         
@@ -229,21 +216,21 @@ class BaseCLI:
             'comment': self.get_comment(main_model, student_model, trainer)
         }
         
-        haha = []
-        
-        if self.mode == 'zip':
-            for main_model, student_model, opt,  trainer in zip(self.main_models, self.student_models, 
-                                                                self.opts,  self.trainers):
+        haha = [get_sett(self.main_models, self.student_models, self.opts, self.trainers)]
+                
+        # if self.mode == 'zip':
+        #     for main_model, student_model, opt,  trainer in zip(self.main_models, self.student_models, 
+        #                                                         self.opts,  self.trainers):
                                     
-                    haha.append(get_sett(main_model, student_model, opt, trainer))
-            return haha
+        #             haha.append(get_sett(main_model, student_model, opt, trainer))
+        #     return haha
 
-        for main_model in self.main_models:
-            for student_model in self.student_models:
-                for opt in self.opts:
-                    for trainer in self.trainers:
+        # for main_model in self.main_models:
+        #     for student_model in self.student_models:
+        #         for opt in self.opts:
+        #             for trainer in self.trainers:
                             
-                        haha.append(get_sett(main_model, student_model, opt, trainer))
+        #                 haha.append(get_sett(main_model, student_model, opt, trainer))
         return haha
     
     def get_comment(self, main_model, student_model, trainer):
@@ -260,8 +247,7 @@ class BaseCLI:
     def get_opt_sett(self, y_main_model, y_student, y_opt_series, dataset):
         # if y_model is None: return "placeholder"
         # if y_opt_series is not None: return y_opt_series
-        
-        
+
         main_model = self.get_model_name(y_main_model, None)
         y_opt = f"{y_opt_series}/{main_model}"
 
@@ -284,14 +270,6 @@ class BaseCLI:
         
         return path
 
-    def save_outputpath_file(self, exp_paths, exp_type = 'exp'):
-        os.makedirs(base(f'./{exp_type}'), exist_ok=True)
-        with open(base(f'./{exp_type}/paths.txt'), 'a+') as f:
-            f.write("\n".join(exp_paths))
-            f.write("\n")
-            f.close()
-            
-        print(base(f'./{exp_type}/paths.txt'))
         
 if __name__ == "__main__":
     Utility.pid_gpu_cmd_mapping()
